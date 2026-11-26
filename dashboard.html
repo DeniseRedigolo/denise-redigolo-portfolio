@@ -319,12 +319,15 @@ function buildControls(){
   sel.value=state.metric;
   const chips=$('#chips');chips.replaceChildren();
   chips.appendChild(H('span',{class:'lbl',text:'Produtos'}));
+  chips.title='Clique em um produto para ver só ele; clique em outros para somar; "Todos" restaura.';
   DATA.forEach(p=>{
     const b=H('button',{class:'chip',type:'button','aria-pressed':'true','data-id':p.id});
     const sw=H('span',{class:'sw'});sw.style.background=colorOf(p);
     b.appendChild(sw);b.appendChild(document.createTextNode(p.name));
     b.addEventListener('click',()=>{
-      if(state.sel.has(p.id)){if(state.sel.size>1)state.sel.delete(p.id)}else state.sel.add(p.id);
+      if(state.sel.size===DATA.length){state.sel=new Set([p.id])}
+      else if(state.sel.has(p.id)){state.sel.delete(p.id);if(!state.sel.size)DATA.forEach(q=>state.sel.add(q.id))}
+      else state.sel.add(p.id);
       syncChips();renderAll();
     });
     chips.appendChild(b);
