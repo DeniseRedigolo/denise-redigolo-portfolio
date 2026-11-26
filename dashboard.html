@@ -329,7 +329,7 @@ function buildControls(){
     });
     chips.appendChild(b);
   });
-  const all=H('button',{class:'chip',type:'button',text:'Todos'});
+  const all=H('button',{class:'chip',type:'button',id:'chipAll','aria-pressed':'true',text:'Todos'});
   all.addEventListener('click',()=>{DATA.forEach(p=>state.sel.add(p.id));syncChips();renderAll()});
   chips.appendChild(all);
   $('#period').addEventListener('change',e=>{state.period=+e.target.value;renderAll()});
@@ -341,7 +341,11 @@ function buildControls(){
     renderAll();
   });
 }
-function syncChips(){document.querySelectorAll('.chip[data-id]').forEach(b=>b.setAttribute('aria-pressed',state.sel.has(b.dataset.id)?'true':'false'))}
+function syncChips(){
+  document.querySelectorAll('.chip[data-id]').forEach(b=>b.setAttribute('aria-pressed',state.sel.has(b.dataset.id)?'true':'false'));
+  const a=document.getElementById('chipAll');
+  if(a){const full=state.sel.size===DATA.length;a.setAttribute('aria-pressed',full?'true':'false');}
+}
 
 /* ---------- KPIs ---------- */
 function renderKpis(){
